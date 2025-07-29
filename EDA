@@ -1,0 +1,71 @@
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import missingno as msno
+from sklearn.preprocessing import LabelEncoder
+
+# Load your dataset (update filename if different)
+df = pd.read_csv('/content/IPL2020_Tweets.csv')  # Change the filename if needed
+
+# Display first 5 rows
+print("🔹 First 5 Rows of Dataset:")
+display(df.head())
+
+# Basic info
+print("\n🔹 Dataset Info:")
+df.info()
+
+# Shape of dataset
+print(f"\n🔹 Dataset Shape: {df.shape}")
+
+# Check for duplicates
+print(f"\n🔹 Duplicate Rows: {df.duplicated().sum()}")
+
+# Column-wise missing values
+print("\n🔹 Missing Values:")
+display(df.isnull().sum())
+
+# Visualize missing values
+msno.matrix(df)
+plt.show()
+
+# Summary statistics
+print("\n🔹 Descriptive Statistics:")
+display(df.describe(include='all'))
+
+# Data types
+print("\n🔹 Data Types:")
+print(df.dtypes)
+
+# Unique values per column
+print("\n🔹 Unique Values in Each Column:")
+for col in df.columns:
+    print(f"{col}: {df[col].nunique()}")
+
+# Correlation matrix (for numeric columns)
+print("\n🔹 Correlation Matrix:")
+plt.figure(figsize=(12,8))
+sns.heatmap(df.corr(numeric_only=True), annot=True, cmap='coolwarm', fmt='.2f')
+plt.title("Correlation Heatmap")
+plt.show()
+
+# Categorical column distribution
+print("\n🔹 Value Counts of Categorical Columns:")
+cat_cols = df.select_dtypes(include='object').columns
+for col in cat_cols:
+    print(f"\n{col} Value Counts:")
+    print(df[col].value_counts())
+
+# Histograms for numerical features
+print("\n🔹 Distribution of Numeric Features:")
+df.hist(bins=20, figsize=(15,10))
+plt.tight_layout()
+plt.show()
+
+# Pairplot (for small datasets)
+if df.shape[1] <= 6:  # Avoids plotting too many columns
+    print("\n🔹 Pairplot of Features:")
+    sns.pairplot(df)
+    plt.show()
